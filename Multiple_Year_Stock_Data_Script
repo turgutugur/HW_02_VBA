@@ -1,0 +1,78 @@
+Attribute VB_Name = "Module1"
+Sub Multiple_year_stock_data()
+
+Dim ws As Worksheet
+
+For Each ws In Worksheets
+
+ws.Range("I1").Value = "Ticker"
+ws.Range("J1").Value = "Yearly Change"
+ws.Range("K1").Value = "Percent Change"
+ws.Range("L1").Value = "Total Stock Volume"
+ws.Range("P1").Value = "Ticker"
+ws.Range("Q1").Value = "Value"
+ws.Range("O2").Value = "Greatest % Increase"
+ws.Range("O3").Value = "Greatest % Decrease"
+ws.Range("O4").Value = "Greatest Total Volume"
+ws.Range("O5").Value = "Least Total Volume"
+ws.Range("K1").NumberFormat = "0.00%"
+
+Dim ticker As String
+
+Dim total_stock_volume As Double
+total_stock_volume = 0
+Dim j As Integer
+j = 2
+
+For i = 2 To 797711
+
+If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+    ticker = ws.Cells(i, 1).Value
+    total_stock_volume = total_stock_volume + ws.Cells(i, 7).Value
+    ws.Cells(j, 9).Value = ticker
+    ws.Cells(j, 12).Value = total_stock_volume
+    j = j + 1
+    total_stock_volume = 0
+Else
+    total_stock_volume = total_stock_volume + ws.Cells(i, 7).Value
+
+End If
+Next i
+
+Dim year_open As Double
+Dim year_close As Double
+Dim yearly_change As Double
+Dim percent_change As Double
+Dim k As Integer
+k = 2
+
+For i = 2 To 797711
+
+If Right(ws.Cells(i, 2), 4) = "0101" Then
+    year_open = ws.Cells(i, 3)
+    
+ElseIf Right(ws.Cells(i, 2), 4) = "1230" And Right(ws.Cells(i, 2), 4) = "1231" Then
+
+    year_close = ws.Cells(i, 6)
+    yearly_change = year_close - year_open
+     ws.Cells(k, 10).Value = yearly_change
+    k = k + 1
+ElseIf open_year <> 0 Then
+    percent_change = yearly_change / year_open
+    ws.Cells(k, 11).Value = percent_change
+    
+End If
+
+If ws.Cells(k, 10).Value > 0 Then
+    ws.Cells(k, 10).Interior.ColorIndex = 4
+Else
+    ws.Cells(k, 10).Interior.ColorIndex = 3
+
+End If
+
+Next i
+
+
+
+Next ws
+End Sub
